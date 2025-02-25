@@ -37,25 +37,19 @@ if (isset($_POST['register'])) {
         }
 
         try {
-            $stmt = $pdo->prepare("SELECT id_droits FROM droits WHERE libelle_droits = 'User'");
-            $stmt->execute();
-            $droits = $stmt->fetchColumn();
+            $droits = 2; 
 
-            if (!$droits) {
-                $message = "❌ Erreur : le rôle 'User' n'existe pas dans la table 'droits'.";
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE LOWER(mail) = ?");
+            $stmt->execute([$mail]);
+            $count = $stmt->fetchColumn();
+
+            if ($count > 0) {
+                $message = "❌ Cet email est déjà utilisé.";
             } else {
-                $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE LOWER(mail) = ?");
-                $stmt->execute([$mail]);
-                $count = $stmt->fetchColumn();
+                $stmt = $pdo->prepare("INSERT INTO users (nom, prenom, mail, password, droits, avatar) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$nom, $prenom, $mail, $password, $droits, $avatarPath]);
 
-                if ($count > 0) {
-                    $message = "❌ Cet email est déjà utilisé.";
-                } else {
-                    $stmt = $pdo->prepare("INSERT INTO users (nom, prenom, mail, password, droits, avatar) VALUES (?, ?, ?, ?, ?, ?)");
-                    $stmt->execute([$nom, $prenom, $mail, $password, $droits, $avatarPath]);
-
-                    $message = '✅ Inscription réussie ! Vous pouvez maintenant vous connecter.';
-                }
+                $message = '✅ Inscription réussie ! Vous pouvez maintenant vous connecter.';
             }
         } catch (PDOException $e) {
             $message = "❌ Erreur SQL : " . $e->getMessage();
@@ -65,19 +59,21 @@ if (isset($_POST['register'])) {
     }
 }
 
+
 if (isset($_POST['login'])) {
     if (!empty($_POST['mail']) && !empty($_POST['password'])) {
         $mail = strtolower(trim($_POST['mail']));
         $password = $_POST['password'];
 
         try {
-            $stmt = $pdo->prepare("SELECT id_users, nom, prenom, password FROM users WHERE LOWER(mail) = ?");
+            $stmt = $pdo->prepare("SELECT id_users, nom, prenom, password, droits FROM users WHERE LOWER(mail) = ?");
             $stmt->execute([$mail]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['id_users'] = $user['id_users'];
                 $_SESSION['user_name'] = $user['nom'] . ' ' . $user['prenom'];
+                $_SESSION['droits'] = $user['droits'];
 
                 header("Location: index.php");
                 exit();
@@ -91,6 +87,7 @@ if (isset($_POST['login'])) {
         $message = "❌ Tous les champs sont obligatoires.";
     }
 }
+
 ?>
 
 <!DOCTYPE html>

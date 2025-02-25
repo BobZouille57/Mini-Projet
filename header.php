@@ -8,13 +8,14 @@ if (!isset($_SESSION['id_users'])) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT nom, prenom, avatar FROM users WHERE id_users = ?");
+    $stmt = $pdo->prepare("SELECT nom, prenom, avatar, droits FROM users WHERE id_users = ?");
     $stmt->execute([$_SESSION['id_users']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
         $user_name = htmlspecialchars($user['prenom'] . ' ' . $user['nom']);
         $avatar = htmlspecialchars($user['avatar']);
+        $droits = $user['droits'];  // On récupère les droits
     } else {
         session_destroy();
         header("Location: login.php");
@@ -45,6 +46,9 @@ try {
             <ul class="menu-list">
                 <li><a href="index.php">Accueil</a></li>
                 <li><a href="tarifs.php">Tarifs</a></li>
+                <?php if ($droits == 1): ?>
+                    <li><a href="usagers.php">Administration</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
 

@@ -1,6 +1,7 @@
 header {
+    font-family: Arial, sans-serif;
     padding: 15px 20px;
-    background-color: #f4f4f4;
+    background-color: #1976d2;
     margin-bottom: 20px;
     display: flex;
     justify-content: center;
@@ -68,7 +69,7 @@ header {
     list-style: none;
     padding: 0;
     margin: 5px 0;
-    width: 120px;
+    width: 180px;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s linear 0.3s, opacity 0.3s ease-in-out;
@@ -82,19 +83,25 @@ header {
 }
 
 .menu-list li {
-    padding: 10px;
+    padding: 12px;
+    text-align: center;
 }
 
 .menu-list li a {
     text-decoration: none;
     color: #333;
     display: block;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
 }
 
 .menu-list li:hover {
     background-color: #f0f0f0;
 }
 
+.menu-list li a:hover {
+    color: #007bff;
+}
 
 .logout-btn {
     margin-left: 20px;

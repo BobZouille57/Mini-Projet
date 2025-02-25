@@ -6,19 +6,6 @@ body {
     color: #333;
 }
 
-header {
-    background-color: #1976d2;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
-}
-
-header a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 20px;
-}
-
 main {
     margin: 20px auto;
     padding: 20px;
