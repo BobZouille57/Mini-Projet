@@ -26,7 +26,7 @@ $droits = $_SESSION['droits'];
         <p><?php echo ($droits == 1) ? "Administrateur authentifié" : "Utilisateur authentifié"; ?></p>
 
         <?php if ($droits == 1): ?>
-            <p><a href="usagers.php">🔧 Accéder à l'administration</a></p>
+            <p><a href="usagers.php" class="admin-access-btn">🔧 Accéder à l'administration</a></p>
         <?php endif; ?>
     </main>
 </body>
